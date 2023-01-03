@@ -1,0 +1,12 @@
+io/github/oguzhantortop/elasticjdbc/ElasticJdbcDriver.class
+io/github/oguzhantortop/elasticjdbc/ElasticJdbcTypes.class
+io/github/oguzhantortop/elasticjdbc/ElasticUtil.class
+io/github/oguzhantortop/elasticjdbc/ElasticJdbcPreparedStatement.class
+io/github/oguzhantortop/elasticjdbc/ElasticResultSet.class
+io/github/oguzhantortop/elasticjdbc/ElasticJdbcDatabaseMetaData.class
+io/github/oguzhantortop/elasticjdbc/ConfigStore.class
+io/github/oguzhantortop/elasticjdbc/ElasticJdbcConnection.class
+io/github/oguzhantortop/elasticjdbc/ResultSetColumnDescriptor.class
+io/github/oguzhantortop/elasticjdbc/ElasticJdbcStatement.class
+io/github/oguzhantortop/elasticjdbc/ElasticFieldType.class
+io/github/oguzhantortop/elasticjdbc/ElasticResultSet$1.class
