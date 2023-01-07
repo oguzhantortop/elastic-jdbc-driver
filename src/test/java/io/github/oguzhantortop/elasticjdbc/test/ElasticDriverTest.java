@@ -16,8 +16,8 @@ public class ElasticDriverTest {
 		try {
 			Class.forName("io.github.oguzhantortop.elasticjdbc.ElasticJdbcDriver");
 			Connection conn = DriverManager
-			        .getConnection("jdbc:elasticjdbc:http://20.67.35.226:7001",
-			                "elastic", "7wqP26.QyMZpexDIx");
+			        .getConnection("jdbc:elasticjdbc:http://localhost",
+			                "elastic", "password");
 			DatabaseMetaData metaData = conn.getMetaData();
 			Statement statement = conn.createStatement();
 			ResultSet rs = statement.executeQuery("select * from \"kurumtürk_million\" ");
@@ -57,7 +57,6 @@ public class ElasticDriverTest {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			// TODO: handle exception
 		}
 	}
 	
