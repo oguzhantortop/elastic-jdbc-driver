@@ -190,7 +190,7 @@ public class ElasticResultSet implements ResultSet {
 			result = gson.fromJson(resultArr.toString(), resultType);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new SQLException(e.getMessage());
 		}
 	}
 
@@ -304,8 +304,10 @@ public class ElasticResultSet implements ResultSet {
 			cursor++;
 		} else if (!scroll.isEmpty()) {
 			loadElasticData(ElasticUtil.scrollElastic(scroll));
-			cursor  = 0;
-			hasNext =true;
+			if(!result.isEmpty()) {
+				cursor  = 0;
+				hasNext =true;
+			}
 		}
 
 		return hasNext;

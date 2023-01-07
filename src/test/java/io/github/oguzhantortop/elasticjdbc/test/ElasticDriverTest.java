@@ -20,7 +20,7 @@ public class ElasticDriverTest {
 			                "elastic", "7wqP26.QyMZpexDIx");
 			DatabaseMetaData metaData = conn.getMetaData();
 			Statement statement = conn.createStatement();
-			ResultSet rs = statement.executeQuery("SELECT * from \"kurumtürk_million\" limit 1000");
+			ResultSet rs = statement.executeQuery("select ulke from \"kurumtürk_million\" group by ulke");
 			
 			//ResultSet rs = metaData.getColumns(null, null, "dumb_with_join",null);//.getTables(null,"docker-cluster",null,null);
 			
