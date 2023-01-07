@@ -20,7 +20,7 @@ public class ElasticDriverTest {
 			                "elastic", "7wqP26.QyMZpexDIx");
 			DatabaseMetaData metaData = conn.getMetaData();
 			Statement statement = conn.createStatement();
-			ResultSet rs = statement.executeQuery("select ulke from \"kurumtürk_million\" group by ulke");
+			ResultSet rs = statement.executeQuery("select * from \"kurumtürk_million\" ");
 			
 			//ResultSet rs = metaData.getColumns(null, null, "dumb_with_join",null);//.getTables(null,"docker-cluster",null,null);
 			
@@ -45,7 +45,7 @@ public class ElasticDriverTest {
 //				System.out.println("kolon etiket: "+rs2.getMetaData().getColumnLabel(i)+" kolon ismi: "+rs2.getMetaData().getColumnName(i)+" kolon tipi: "+rs2.getMetaData().getColumnTypeName(i));
 //			}
 			
-			int i = 0;
+			int i = 1;
 //			
 			while(rs.next()) {
 //				for(int i =1 ;i< rs.getMetaData().getColumnCount();i++) {

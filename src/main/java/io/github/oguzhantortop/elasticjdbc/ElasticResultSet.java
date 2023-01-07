@@ -47,9 +47,7 @@ public class ElasticResultSet implements ResultSet {
 	static final DateFormat DATE_ISO_8601 = new SimpleDateFormat("yyyy-MM-dd");
 	private List<LinkedHashMap<String, Object>> result = null;
 	private int cursor = -1;
-	private Map<String, Integer> columnMap = new HashMap<String, Integer>();
 	private RowSetMetaData metaData;
-	private boolean metaQuery = false;
 	private boolean wasNull = false;
 	private int fetchDirection = ResultSet.FETCH_FORWARD;
 	private int iterationStep = 1;
@@ -70,10 +68,6 @@ public class ElasticResultSet implements ResultSet {
 		loadElasticData(sqlResponse);
 	}
 	
-	public ElasticResultSet(String sqlResponse,boolean metaQuery) throws SQLException {
-		this.metaQuery = metaQuery;
-		loadElasticData(sqlResponse);
-	}
 
 	public ElasticResultSet(List<? extends ResultSetColumnDescriptor> columnDescriptors, List<List<Object>> dataRows) throws SQLException {
 		try {
