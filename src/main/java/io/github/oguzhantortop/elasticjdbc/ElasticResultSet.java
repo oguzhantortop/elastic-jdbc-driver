@@ -54,6 +54,7 @@ public class ElasticResultSet implements ResultSet {
 	private int fetchDirection = ResultSet.FETCH_FORWARD;
 	private int iterationStep = 1;
 	private int fetchSize = 1000;
+	private String scroll = "";
 
 	public ElasticResultSet() {
 	}
@@ -131,37 +132,45 @@ public class ElasticResultSet implements ResultSet {
 		
 	}
 
-	public void loadElasticData(String sqlResponse) throws SQLException {
+	private void loadElasticData(String sqlResponse) throws SQLException {
 		try {
 			System.out.println(sqlResponse);
-			System.out.println("bitti");
+			iterationStep = 0;
+			scroll  = "";
 			Gson gson = new Gson();
 			// This converts your String into whatever Type you want. In this case, we are
 			// using JsonObjects from GSON.
 			JsonObject json = gson.fromJson(sqlResponse, JsonObject.class);
+			
+			if(json.has("cursor")) {
+				scroll = json.get("cursor").getAsString();
+			}
 
 			// Now, we want to get the Json Array from the JsonObject we just created above
-			JsonArray columns = json.get("columns").getAsJsonArray();
-			Iterator<JsonElement> colIter = columns.iterator();
-			RowSetMetaData rsMD = new RowSetMetaDataImpl();
-			int index = 1;
-			rsMD.setColumnCount(columns.size());
-			while (colIter.hasNext()) {
-				JsonElement colEl = colIter.next();
-				String colName = ((JsonObject) colEl).get("name").getAsString().toString();
-				String type = ((JsonObject) colEl).get("type").getAsString().toString();
-				rsMD.setColumnName(index, colName);
-				if(type.equals("datetime"))
-					type = "date";
-				ElasticFieldType sqlType = getSqlType(type);
-				rsMD.setColumnType(index, sqlType.getSqlTypeCode());
-				rsMD.setPrecision(index, sqlType.getPrecision());
-				rsMD.setCaseSensitive(index, sqlType.isCaseSensitive());
-				rsMD.setSigned(index, !sqlType.isUnsigned());
-				rsMD.setColumnTypeName(index,sqlType.getSqlType());
-				index++;
+			if(this.metaData == null) {
+				
+				JsonArray columns = json.get("columns").getAsJsonArray();
+				Iterator<JsonElement> colIter = columns.iterator();
+				RowSetMetaData rsMD = new RowSetMetaDataImpl();
+				int index = 1;
+				rsMD.setColumnCount(columns.size());
+				while (colIter.hasNext()) {
+					JsonElement colEl = colIter.next();
+					String colName = ((JsonObject) colEl).get("name").getAsString().toString();
+					String type = ((JsonObject) colEl).get("type").getAsString().toString();
+					rsMD.setColumnName(index, colName);
+					if(type.equals("datetime"))
+						type = "date";
+					ElasticFieldType sqlType = getSqlType(type);
+					rsMD.setColumnType(index, sqlType.getSqlTypeCode());
+					rsMD.setPrecision(index, sqlType.getPrecision());
+					rsMD.setCaseSensitive(index, sqlType.isCaseSensitive());
+					rsMD.setSigned(index, !sqlType.isUnsigned());
+					rsMD.setColumnTypeName(index,sqlType.getSqlType());
+					index++;
+				}
+				this.metaData = rsMD;
 			}
-			this.metaData = rsMD;
 
 			JsonArray rows = json.get("rows").getAsJsonArray();
 			Iterator<JsonElement> iter = rows.iterator();
@@ -169,14 +178,11 @@ public class ElasticResultSet implements ResultSet {
 			while (iter.hasNext()) {
 				JsonElement el = iter.next();
 				JsonObject temp = new JsonObject();
-				colIter = columns.iterator();
-				index = 0;
-				while (colIter.hasNext()) {
-					JsonElement colEl = colIter.next();
-					String colName = ((JsonObject) colEl).get("name").getAsString().toString();
-					temp.add(colName, ((JsonArray) el).get(index));
-					index++;
+				
+				for (int i = 1; i <= this.metaData.getColumnCount(); i++) {
+					temp.add(this.metaData.getColumnName(i), ((JsonArray) el).get(i-1));
 				}
+				
 				resultArr.add(temp);
 			}
 			Type resultType = new TypeToken<List<LinkedHashMap<String, Object>>>() {
@@ -293,9 +299,13 @@ public class ElasticResultSet implements ResultSet {
 	@Override
 	public boolean next() throws SQLException {
 
-		final boolean hasNext = (cursor + 1) < result.size();
+		boolean hasNext = (cursor + 1) < result.size();
 		if (hasNext) {
 			cursor++;
+		} else if (!scroll.isEmpty()) {
+			loadElasticData(ElasticUtil.scrollElastic(scroll));
+			cursor  = 0;
+			hasNext =true;
 		}
 
 		return hasNext;

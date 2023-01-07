@@ -34,6 +34,24 @@ public class ElasticUtil {
 		return sqlResponse;
 	}
 	
+	
+	public static String scrollElastic(String scrollId) {
+		RestTemplate restTemplate = new RestTemplate();
+		if(ConfigStore.getInstance().isAuthenticated()) {
+			restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(ConfigStore.getInstance().getProps().get("user").toString(), ConfigStore.getInstance().getProps().get("password").toString(), null));
+		}
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		JsonObject queryObject = new JsonObject();
+		queryObject.addProperty("cursor", scrollId);
+		HttpEntity<String> requestEntity = new HttpEntity(queryObject.toString().getBytes(Charset.defaultCharset()),
+				headers);
+		String elasticResourceUrl = ConfigStore.getInstance().getHost()+":"+ConfigStore.getInstance().getPort()+"/_sql?format=json";
+		String sqlResponse = restTemplate.postForObject(elasticResourceUrl, requestEntity, String.class);
+		return sqlResponse;
+	}
+	
 	public static String getElasticClusterName() {
 		RestTemplate restTemplate = new RestTemplate();
 		if(ConfigStore.getInstance().isAuthenticated()) {

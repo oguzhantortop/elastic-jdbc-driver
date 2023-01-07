@@ -16,11 +16,11 @@ public class ElasticDriverTest {
 		try {
 			Class.forName("io.github.oguzhantortop.elasticjdbc.ElasticJdbcDriver");
 			Connection conn = DriverManager
-			        .getConnection("jdbc:elasticjdbc:http://localhost:7001",
-			                "myUsername", "myPassword");
+			        .getConnection("jdbc:elasticjdbc:http://20.67.35.226:7001",
+			                "elastic", "7wqP26.QyMZpexDIx");
 			DatabaseMetaData metaData = conn.getMetaData();
 			Statement statement = conn.createStatement();
-			ResultSet rs = statement.executeQuery("SELECT * from kurum_turkpatent");
+			ResultSet rs = statement.executeQuery("SELECT * from \"kurumtürk_million\" limit 1000");
 			
 			//ResultSet rs = metaData.getColumns(null, null, "dumb_with_join",null);//.getTables(null,"docker-cluster",null,null);
 			
@@ -44,12 +44,15 @@ public class ElasticDriverTest {
 //			for(int i =1 ;i<= rs2.getMetaData().getColumnCount();i++) {
 //				System.out.println("kolon etiket: "+rs2.getMetaData().getColumnLabel(i)+" kolon ismi: "+rs2.getMetaData().getColumnName(i)+" kolon tipi: "+rs2.getMetaData().getColumnTypeName(i));
 //			}
+			
+			int i = 0;
 //			
 			while(rs.next()) {
-				for(int i =1 ;i< rs.getMetaData().getColumnCount();i++) {
-					
-					System.out.println(rs.getObject(i));
-				}
+//				for(int i =1 ;i< rs.getMetaData().getColumnCount();i++) {
+//					
+//					System.out.print(i);
+//				}
+				System.out.println(i++);
 			}
 			
 		} catch (Exception e) {

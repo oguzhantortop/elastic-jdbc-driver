@@ -112,7 +112,6 @@ public enum ElasticFieldType {
 
 
 		public static ElasticFieldType resolveByElasticType(String elType) {
-			System.out.println(elType);
 			return Arrays.stream(ElasticFieldType.values()).filter(elt -> elt.elType.equals(elType)).findFirst()
 					.orElseGet(null);
 		}
