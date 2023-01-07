@@ -1,4 +1,4 @@
-# elasticjdbc
+# Elastic JDBC Driver
 
 * This JDBC Driver is a wrapper driver of Elastic SQL Rest API (https://www.elastic.co/guide/en/elasticsearch/reference/current/sql-rest.html)
 
